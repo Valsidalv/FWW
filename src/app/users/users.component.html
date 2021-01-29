@@ -1,0 +1,67 @@
+<form>
+  <input
+    type="text"
+    placeholder="Type to search..."
+	[(ngModel)]="searchValue"
+	[ngModelOptions]="{ standalone: true }"
+  />
+
+  <input
+    type="checkbox"
+    name="active"
+    [(ngModel)]="isActiveChecked"
+    [ngModelOptions]="{ standalone: true }"
+  />
+  is active?
+
+  <select
+    [(ngModel)]="allowedItemsNumber"
+    [ngModelOptions]="{ standalone: true }"
+    (change)="selectChange()"
+  >
+    <option value="20" selected>20</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+</form>
+
+<table>
+  <thead>
+    <th (click)="countryClick()">Country</th>
+    <th>State</th>
+    <th>Full name</th>
+    <th>Balance</th>
+    <th>Is Active</th>
+    <th>Registered</th>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let single of countries; let i = index">
+      <ng-container *ngFor="let state of single.state; let j = index">
+        <ng-container *ngFor="let user of state.users; let k = index">
+          <tr
+            *ngIf="
+              checkUserFilter(user, state, single) &&
+              paginationValidation(i, j, k)
+            "
+          >
+            <td>{{ single.country }}</td>
+            <td>{{ state.name }}</td>
+            <td>{{ user.fullName }}</td>
+            <td>{{ user.balance }}</td>
+            <td>{{ user.isActive ? "Yes" : "No" }}</td>
+            <td>{{ user.registered }}</td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </tbody>
+</table>
+
+<div>
+  <a
+    *ngFor="let item of paginationArray; let i = index"
+    (click)="changePage(i + 1)"
+  >
+    {{ i + 1 }}
+  </a>
+</div>
